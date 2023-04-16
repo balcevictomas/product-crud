@@ -1,10 +1,11 @@
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
-{% endblock %}
+{% extends 'base.html.twig' %}
 
+{% block title %}Edit product{% endblock %}
+
+{% block body %}
 <div>
     <div class="border max-w-lg mx-auto mt-20 flex flex-col">
-        {% if product %}
+        {% if product and app.user %}
         <div class="flex justify-center">
             Edit product
         </div>
@@ -22,14 +23,22 @@
                 <label>
                     <input min="0.01" step='0.01' class="border" type="number" value="{{ product.priceEur }}" name="priceEur">
                 </label>
-                <input type="submit">
+                <div class="flex justify-center pt-5">
+                    <input class="w-[200px] bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">
+                </div>
             </form>
         </div>
-        {% else %}
+        {% elseif not(app.user) %}
         <div>
-            There is not product by your request
+            No access
+        </div>
+        {% elseif not(product) %}
+        <div>
+            Bad request
         </div>
         {% endif %}
     </div>
 
 </div>
+
+{% endblock body %}
