@@ -13,7 +13,42 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
+    {% if app.user %}
+    <nav>
+        <ul>
+            <li><a href="{{ path('app_product') }}">Products</a></li>
+            <li><a href="{{ path('app_product_add') }}">Add product</a></li>
+            <li class="float-right"><a href="{{ path('app_logout') }}">Logout</a></li>
+            <li class="float-right"><span>{{ app.user.email }}</span></li>
+        </ul>
+    </nav>
+    {% endif %}
     <body>
         {% block body %}{% endblock %}
     </body>
 </html>
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a, li span {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+
+    li span {
+        color: gold;
+    }
+</style>

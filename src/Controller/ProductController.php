@@ -21,8 +21,13 @@ class ProductController extends AbstractController
         $this->entityManager = $entityManager;
     }
     #[Route('/products', name: 'app_product')]
+    #[Route('/', name: 'app_product')]
     public function show(): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $products = $this->productRepository->findAll();
 
         return $this->render('product/index.html.twig', [
@@ -32,6 +37,10 @@ class ProductController extends AbstractController
     #[Route('/product/delete/{id}', name: 'app_product_delete', defaults: ['id' => null] )]
     public function delete($id): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $productRepository = $this->entityManager->getRepository(Product::class);
         $product = $productRepository->find(['id' => $id]);
         $this->entityManager->remove($product);
@@ -47,12 +56,20 @@ class ProductController extends AbstractController
     #[Route('/product/add', name: 'app_product_add', methods: ['GET', 'HEAD'] )]
     public function add(): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         return $this->render('product/add.html.twig');
     }
 
     #[Route('/product/add', name: 'app_product_add_post', methods: ['POST'] )]
     public function addProduct(Request $request): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $title = (string)$request->get('title');
         $description = (string)$request->get('description');
         $priceEur = (float)$request->get('priceEur');
@@ -76,6 +93,10 @@ class ProductController extends AbstractController
     #[Route('/product/edit/{id}', name: 'app_product_edit', defaults: ['id' => null], methods: ['GET', 'HEAD'])]
     public function edit($id): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $productRepository = $this->entityManager->getRepository(Product::class);
         $product = $productRepository->find(['id' => $id]);
         return $this->render('product/edit.html.twig', [
@@ -86,6 +107,10 @@ class ProductController extends AbstractController
     #[Route('/product/edit/{id}', name: 'app_product_edit_post', defaults: ['id' => null], methods: ['POST'])]
     public function editPost($id, Request $request): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $title = (string)$request->get('title');
         $description = (string)$request->get('description');
         $priceEur = (float)$request->get('priceEur');
